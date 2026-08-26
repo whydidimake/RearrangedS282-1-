@@ -1,0 +1,16 @@
+{
+  "Id": "RearrangedS282",
+  "Version": "1.2.9",
+  "DisplayName": "Rearranged S282",
+  "Author": "SatiricRug",
+  "EntryMethod": "RearrangedS282.Main.Load",
+  "ManagerVersion": "0.27.3",
+  "HomePage": "https://www.nexusmods.com/derailvalley/mods/752",
+  "Repository": "https://raw.githubusercontent.com/pjschinske/dv-rearranged-S282/main/repository.json",
+  "Requirements": [
+    "LocoMeshSplitter"
+  ],
+  "LoadAfter": [
+    "Gauge"
+  ]
+}

@@ -1,0 +1,45 @@
+ManifestFileVersion: 0
+CRC: 3501442303
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 246445916f6ae10476ae47a3b0bc2d72
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 3b84a9dd0eb567d674b4eb2526617b1c
+HashAppended: 0
+ClassTypes:
+- Class: 1
+  Script: {instanceID: 0}
+- Class: 4
+  Script: {instanceID: 0}
+- Class: 21
+  Script: {instanceID: 0}
+- Class: 23
+  Script: {instanceID: 0}
+- Class: 33
+  Script: {instanceID: 0}
+- Class: 43
+  Script: {instanceID: 0}
+- Class: 48
+  Script: {instanceID: 0}
+- Class: 74
+  Script: {instanceID: 0}
+- Class: 91
+  Script: {instanceID: 0}
+SerializeReferenceClassIdentifiers: []
+Assets:
+- Assets/Prefabs/franklin_type_b_reverse_rear.prefab
+- Assets/Prefabs/franklin_type_b.prefab
+- Assets/Prefabs/franklin_type_b_reverse_4444.prefab
+- Assets/Prefabs/franklin_type_b_4444.prefab
+- Assets/Prefabs/franklin_b_anim_ctrl_4444.controller
+- Assets/Prefabs/LocoS282A_AnimationDriveGear4444.anim
+- Assets/Prefabs/branch_pipe_4444.prefab
+- Assets/Prefabs/branch_pipe.prefab
+- Assets/Mesh/u_joint_mapped.obj
+- Assets/Prefabs/franklin_type_b_reverse.prefab
+- Assets/Prefabs/LocoS282A_AnimationDriveGear.anim
+- Assets/Prefabs/franklin_b_anim_ctrl.controller
+- Assets/Mesh/driveshaft_m_mapped.obj
+Dependencies: []
