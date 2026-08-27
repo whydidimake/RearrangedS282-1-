@@ -117,6 +117,7 @@ namespace RearrangedS282
 
 			//lubrication
 			lubricator,
+			lubricatorspinner,
 			lubricatorSightGlass,
 			lubricatorSupport,
 			lubricatorLabel,
@@ -147,7 +148,10 @@ namespace RearrangedS282
 
 			lCrosshead,
 			rCrosshead,
-
+			rfCrossheadBracket,
+			lfCrossheadBracket,
+			rLiftingArmSupport,
+			lLiftingArmSupport,
 			reachRodSupport,
 
 			/*
@@ -206,7 +210,7 @@ namespace RearrangedS282
 		private ReciprocatingSteamEngine steamEngine;
 
 		private Mesh flangedDriver, blindDriver, blindDriverBigWeight,
-			mainRod;
+			 mainRod;
 			
 
 		//This stuff will be used to switch between the default valve gear animation,
@@ -305,8 +309,13 @@ namespace RearrangedS282
 		private void SetupBody()
 		{
 			splitLoco = transform.Find("LocoS282A_Body/Static_LOD0/s282a_split_body(Clone)");
-			reachRodSupport = splitLoco.Find("s282a_reach_rod_support");
+			
 
+			reachRodSupport = splitLoco.Find("s282a_reach_rod_support");
+			lfCrossheadBracket = splitLoco.Find("s282a_crosshead_guide_l");
+			rfCrossheadBracket = splitLoco.Find("s282a_crosshead_guide_r");
+			lLiftingArmSupport = splitLoco.Find("s282a_lifting_arm_support_l");
+			rLiftingArmSupport = splitLoco.Find("s282a_lifting_arm_support_r");
 			lfCylinder = splitLoco.Find("s282a_cylinder_l");
 			rfCylinder = splitLoco.Find("s282a_cylinder_r");
 			cylinderCocks = splitLoco.Find("s282a_cylinder_cocks");
@@ -320,6 +329,7 @@ namespace RearrangedS282
 		private void SetupLubrication()
 		{
 			lubricator = splitLoco.Find("s282a_lubricator");
+			lubricatorspinner =
 			lubricatorSupport = splitLoco.Find("s282a_lubricator_support");
 			lubricatorSightGlass = transform.Find("LocoS282A_Body/Static_LOD0/s282_gauge_lubricator_glass");
 			manualoilingPoint0R = transform.Find("LocoS282A_Body/MovingParts_LOD0/LocoS282A_Drivetrain R/Oiling0");
@@ -1533,9 +1543,19 @@ namespace RearrangedS282
 				Main.Logger.Error("airsystem is null");
 			}
 			airPumpOutputPipe.localScale = Vector3.one;
-			Main.Logger.Log("reset airsystem"); 
+			Main.Logger.Log("reset airsystem");
 
 			//crosshead guide and lifting arm support
+
+			lfCrossheadBracket.localPosition = Vector3.zero;
+			lfCrossheadBracket.localScale = new Vector3(-1, 1, 1);
+			lfCrossheadBracket.gameObject.SetActive(true);
+			rfCrossheadBracket.localPosition = Vector3.zero;
+			rfCrossheadBracket.localScale = new Vector3(-1, 1, 1);
+			rfCrossheadBracket.gameObject.SetActive(true);
+
+			lLiftingArmSupport.gameObject.SetActive(true);
+			rLiftingArmSupport.gameObject.SetActive(true);
 
 
 
@@ -1984,7 +2004,7 @@ namespace RearrangedS282
 
 		//------ SHOW DRIVERS ------
 
-		/*private void MoveRearBogieTo(float z, bool setKinematic)
+		  private void MoveRearBogieTo(float z, bool setKinematic)
 		{
 			//move rear bogie so that it lines up with the rearmost driver
 			Transform axleR = loco.transform.Find("Axle_R");
@@ -2003,7 +2023,7 @@ namespace RearrangedS282
 				setBogieKinematicLater(axleRRigidbody);
 			axleR.localPosition = new Vector3(axleR.localPosition.x, axleR.localPosition.y, z);
 			//axleRJoint.autoConfigureConnectedAnchor = true;
-		}*/
+		}
 
 		private void Show4Drivers()
 		{
@@ -2118,7 +2138,12 @@ namespace RearrangedS282
 			}
 
 			//crosshead guide and lifting arm support
-			
+			lfCrossheadBracket.localPosition = new Vector3(0, 0.3f, -1);
+			lfCrossheadBracket.localScale = new Vector3(-1, 1, 1.25f);
+			rfCrossheadBracket.localPosition = lfCrossheadBracket.localPosition;
+			rfCrossheadBracket.localScale = lfCrossheadBracket.localScale;
+			lLiftingArmSupport.gameObject.SetActive(false);
+			rLiftingArmSupport.gameObject.SetActive(false);
 		}
 
 		private void Show6Drivers()
@@ -2213,7 +2238,10 @@ namespace RearrangedS282
 			}
 
 			//crosshead guide and lifting arm support
-			
+			lfCrossheadBracket.localPosition = new Vector3(0, 0.21f, 0);
+			rfCrossheadBracket.localPosition = lfCrossheadBracket.localPosition;
+			lLiftingArmSupport.gameObject.SetActive(false);
+			rLiftingArmSupport.gameObject.SetActive(false);
 		}
 
 		//moves drivers back for the 4-8-0 and 4-8-2.
@@ -2290,7 +2318,11 @@ namespace RearrangedS282
 			splitS282A.MoveCylinders(new Vector3(0, 0.145f, 0));
 
 			//crosshead guide and lifting arm support
-			
+
+			lfCrossheadBracket.localPosition = new Vector3(0, 0.145f, 0);
+			rfCrossheadBracket.localPosition = lfCrossheadBracket.localPosition;
+			lLiftingArmSupport.gameObject.SetActive(false);
+			rLiftingArmSupport.gameObject.SetActive(false);
 
 			//hide or show valve gear
 			if (!Main.settings.show282BigValveGear)
@@ -2477,8 +2509,11 @@ namespace RearrangedS282
 			rDryPipe.localScale = new Vector3(-1, 1.2f, 1);
 
 			//crosshead guide and lifting arm support
-			
 
+			lfCrossheadBracket.localPosition = new Vector3(0, -0.1f, 0);
+			rfCrossheadBracket.localPosition = lfCrossheadBracket.localPosition;
+			lLiftingArmSupport.gameObject.SetActive(false);
+			rLiftingArmSupport.gameObject.SetActive(false);
 			//hide or show valve gear
 			if (!Main.settings.show12CoupledValveGear)
 				HideValveGear();
