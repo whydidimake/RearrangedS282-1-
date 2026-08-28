@@ -33,8 +33,6 @@ It can convert the S282 into any of these:
 - 2-12-0
 - 2-12-2
 - 4-12-2 Union Pacific
-- 2-4-4-2
-- 4-4-4-4
 
 ## Locomotives with altered driver size
 
