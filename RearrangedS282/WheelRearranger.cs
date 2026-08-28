@@ -30,6 +30,7 @@ using DV;
 using System.Runtime.ConstrainedExecution;
 
 //abandon all hope ye who enter here
+//hes not joking abandon all hope please
 
 namespace RearrangedS282
 {
@@ -67,8 +68,6 @@ namespace RearrangedS282
 			rightSideRod,
 			leftTwoAxleSideRod,
 			rightTwoAxleSideRod,
-			leftTwoAxleDuplexSideRod,
-			rightTwoAxleDuplexSideRod,
 			lfThreeAxleSideRod,
 			rfThreeAxleSideRod,
 			lrThreeAxleSideRod,
@@ -114,30 +113,22 @@ namespace RearrangedS282
 			rightSixthBrakeShoe,
 
 			//for duplex
-			driveL2,
-			driveR2,
-			leftSeventhDriveWheel,
-			rightSeventhDriveWheel,
-			lfCrossheadBracket,
-			rfCrossheadBracket,
-			lLiftingArmSupport,
-			rLiftingArmSupport,
-			lrCrossheadBracket,
-			rrCrossheadBracket,
-			lfFranklinValveGear,
-			rfFranklinValveGear,
-			lBranchPipe,
-			rBranchPipe,
-			lFranklinBReverseGear,
-			rFranklinBReverseGear,
+
 
 			//lubrication
 			lubricator,
+			lubricatorspinner,
 			lubricatorSightGlass,
-			lubricatorHandle,
 			lubricatorSupport,
 			lubricatorLabel,
 			lubricatorOilLevel,
+			manualoilingPoint0R,
+			manualoilingPoint0L,
+			manualoilingPoint1R,
+			manualoilingPoint1L,
+			manualoilingPoint2R,
+			manualoilingPoint2L,
+
 			rOilLines,
 			fOilLines,
 
@@ -157,7 +148,10 @@ namespace RearrangedS282
 
 			lCrosshead,
 			rCrosshead,
-
+			rfCrossheadBracket,
+			lfCrossheadBracket,
+			rLiftingArmSupport,
+			lLiftingArmSupport,
 			reachRodSupport,
 
 			/*
@@ -196,14 +190,6 @@ namespace RearrangedS282
 			spark6R,
 
 			//duplex wheel spark locations
-			sparkD1L,
-			sparkD2L,
-			sparkD3L,
-			sparkD4L,
-			sparkD1R,
-			sparkD2R,
-			sparkD3R,
-			sparkD4R,
 
 			rearBogie,
 			firstRearAxle,
@@ -212,32 +198,20 @@ namespace RearrangedS282
 			thirdRearAxle,
 
 			//cylinder cock particle effects
-			oldCylCockWaterDrip,
-			oldCylCockSteam,
-			rearCylCockWaterDrip,
-			rearCylCockSteam,
 
 			//sounds
-			valveGearMechanism,
+			valveGearMechanism;
 
-			duplexSteamEngine,
-			duplexTraction,
-			oldSim,
-			duplexSim;
+		private HingeJoint /*lubricatorHandValveJoint,*/ airValveJoint;
 
-		private HingeJoint lubricatorHandValveJoint, airValveJoint;
 
-		SimController oldSimCtrlr;
-
-		PoweredWheelRotationViaAnimation oldDrivetrainRotater,
-			duplexDrivetrainRotaterF, duplexDrivetrainRotaterR;
+		//PoweredWheelRotationViaAnimation oldDrivetrainRotater;
 
 		private ReciprocatingSteamEngine steamEngine;
 
 		private Mesh flangedDriver, blindDriver, blindDriverBigWeight,
-			mainRod, shortMainRod,
-			lCrossheadGuide, lDuplexCrossheadGuide,
-			rCrossheadGuide, rDuplexCrossheadGuide;
+			 mainRod;
+			
 
 		//This stuff will be used to switch between the default valve gear animation,
 		//and our franklin valve gear animation.
@@ -245,11 +219,9 @@ namespace RearrangedS282
 		//one or the other.
 		private RuntimeAnimatorController
 			lfDefaultAnimatorCtrl,
-			rfDefaultAnimatorCtrl,
-			lfFranklinAnimatorCtrl,
-			rfFranklinAnimatorCtrl;
+			rfDefaultAnimatorCtrl;
 
-		private Animator lfAnimator, rfAnimator, lrAnimator, rrAnimator;
+		private Animator lfAnimator, rfAnimator;
 
 		private bool skipWheelArrangementChange = false;
 
@@ -337,29 +309,13 @@ namespace RearrangedS282
 		private void SetupBody()
 		{
 			splitLoco = transform.Find("LocoS282A_Body/Static_LOD0/s282a_split_body(Clone)");
+			
+
+			reachRodSupport = splitLoco.Find("s282a_reach_rod_support");
 			lfCrossheadBracket = splitLoco.Find("s282a_crosshead_guide_l");
 			rfCrossheadBracket = splitLoco.Find("s282a_crosshead_guide_r");
-			lCrossheadGuide = lfCrossheadBracket.GetComponent<MeshFilter>().mesh;
-			rCrossheadGuide = rfCrossheadBracket.GetComponent<MeshFilter>().mesh;
-			lDuplexCrossheadGuide = MeshFinder.alterCrossheadGuideLMesh(lCrossheadGuide);
-			rDuplexCrossheadGuide = MeshFinder.alterCrossheadGuideRMesh(rCrossheadGuide);
-
-			lrCrossheadBracket = Instantiate(lfCrossheadBracket.gameObject, splitLoco).transform;
-			rrCrossheadBracket = Instantiate(rfCrossheadBracket.gameObject, splitLoco).transform;
-			lrCrossheadBracket.GetComponent<MeshFilter>().mesh = lDuplexCrossheadGuide;
-			rrCrossheadBracket.GetComponent<MeshFilter>().mesh = rDuplexCrossheadGuide;
-
-			lrCrossheadBracket.gameObject.SetActive(false);
-			rrCrossheadBracket.gameObject.SetActive(false);
-			lrCrossheadBracket.gameObject.name = "s282a_crosshead_guide_lr";
-			rrCrossheadBracket.gameObject.name = "s282a_crosshead_guide_rr";
-			lrCrossheadBracket.localPosition += new Vector3(0, 0.07f, -4.58f);
-			rrCrossheadBracket.localPosition += new Vector3(0, 0.07f, -4.58f);
-
 			lLiftingArmSupport = splitLoco.Find("s282a_lifting_arm_support_l");
 			rLiftingArmSupport = splitLoco.Find("s282a_lifting_arm_support_r");
-			reachRodSupport = splitLoco.Find("s282a_reach_rod_support");
-
 			lfCylinder = splitLoco.Find("s282a_cylinder_l");
 			rfCylinder = splitLoco.Find("s282a_cylinder_r");
 			cylinderCocks = splitLoco.Find("s282a_cylinder_cocks");
@@ -375,7 +331,11 @@ namespace RearrangedS282
 			lubricator = splitLoco.Find("s282a_lubricator");
 			lubricatorSupport = splitLoco.Find("s282a_lubricator_support");
 			lubricatorSightGlass = transform.Find("LocoS282A_Body/Static_LOD0/s282_gauge_lubricator_glass");
-			lubricatorHandle = lubricatorSightGlass.parent.Find("lubricator pivot");
+			manualoilingPoint0R = transform.Find("LocoS282A_Body/MovingParts_LOD0/LocoS282A_Drivetrain R/Oiling0");
+			manualoilingPoint0L = transform.Find("LocoS282A_Body/MovingParts_LOD0/LocoS282A_Drivetrain L/Oiling0");
+			manualoilingPoint1R = transform.Find("LocoS282A_Body/MovingParts_LOD0/LocoS282A_Drivetrain R/Oiling1");
+			manualoilingPoint1L = transform.Find("LocoS282A_Body/MovingParts_LOD0/LocoS282A_Drivetrain L/Oiling1");
+			manualoilingPoint2R = transform.Find("LocoS282A_Body/MovingParts_LOD0/LocoS282A_Drivetrain L/Oiling2");
 			rOilLines = splitLoco.Find("s282a_oil_lines_r");
 			fOilLines = splitLoco.Find("s282a_oil_lines_f");
 			loco.ExternalInteractableLoaded += LoadExternalInteractables;
@@ -405,15 +365,11 @@ namespace RearrangedS282
 			{
 				Main.Logger.Error("No lubricator oil level found");
 			}
-
-			lubricatorHandValveJoint = externalInteractables.transform
-				.Find("Interactables/lubricator pivot")
-				.GetComponent<HingeJoint>();
-			if (lubricatorHandValveJoint is null)
+			lubricatorspinner = externalInteractables.transform.Find("Interactables/lubricator pivot");
+			if (lubricatorspinner is null)
 			{
-				Main.Logger.Error("No lubricator valve HingeJoint found");
+				Main.Logger.Error("No lubricator spinner found");
 			}
-			lubricatorHandValveJoint.autoConfigureConnectedAnchor = false;
 
 			airValveLabel = externalInteractables.transform.Find("LocoS282A_ExternalInteractables_Labels/AirPump");
 			if (airValveLabel is null)
@@ -432,7 +388,7 @@ namespace RearrangedS282
 			//show correct lubricator placement depending on wheel arrangement
 			lubricatorLabel.localPosition += lubricator.localPosition;
 			lubricatorOilLevel.localPosition = lubricator.localPosition;
-			lubricatorHandValveJoint.connectedAnchor += lubricator.localPosition;
+			lubricatorspinner.localPosition += lubricator.localPosition;
 
 			//also move the air pump hand valve and label as well
 			airValveLabel.localPosition += airPumpInputPipe.localPosition;
@@ -443,9 +399,9 @@ namespace RearrangedS282
 		{
 			lubricatorLabel = null;
 			lubricatorOilLevel = null;
-			lubricatorHandValveJoint = null;
 			airValveLabel = null;
 			airValveJoint = null;
+			lubricatorspinner = null;
 		}
 
 		private void SetupAir()
@@ -490,7 +446,9 @@ namespace RearrangedS282
 				}
 			}
 			driveAxle1 = frontBogie.Find("[axle] drive 0");
+		   
 			driveAxle2 = frontBogie.Find("[axle] drive 1");
+			
 
 			//Generate the second front axle
 			GameObject secondFrontAxleGO = Instantiate(firstFrontAxle.gameObject, firstFrontAxle.parent);
@@ -526,105 +484,73 @@ namespace RearrangedS282
 		{
 			steamEngine = GetComponent<SimController>().simFlow.OrderedSimComps.OfType<ReciprocatingSteamEngine>().First();
 
-			driveL = transform.Find("LocoS282A_Body/MovingParts_LOD0/Drivetrain L");
-			driveR = transform.Find("LocoS282A_Body/MovingParts_LOD0/Drivetrain R");
-
+			driveL = transform.Find("LocoS282A_Body/MovingParts_LOD0/LocoS282A_Drivetrain L");
+			
+			driveR = transform.Find("LocoS282A_Body/MovingParts_LOD0/LocoS282A_Drivetrain R");
+			
+			
 			//I refuse to use Altfuture's names for the valve gear parts
 			lCrosshead = driveL.Find("s282_mech_push_rod");
+			
 			rCrosshead = driveR.Find("s282_mech_push_rod");
-
-			lfFranklinValveGear = Instantiate(AssetBundleLoader.FranklinBValveGear, driveL).transform;
-			rfFranklinValveGear = Instantiate(AssetBundleLoader.FranklinBValveGear, driveR).transform;
+			
+			//lfFranklinValveGear = Instantiate(AssetBundleLoader.FranklinBValveGear, driveL).transform;
+			//rfFranklinValveGear = Instantiate(AssetBundleLoader.FranklinBValveGear, driveR).transform;
 
 			lfAnimator = driveL.GetComponent<Animator>();
+			
 			rfAnimator = driveR.GetComponent<Animator>();
+			
 			lfDefaultAnimatorCtrl = lfAnimator.runtimeAnimatorController;
+			
 			rfDefaultAnimatorCtrl = rfAnimator.runtimeAnimatorController;
+			
+			
 			//lfFranklinAnimatorCtrl = Instantiate(AssetBundleLoader.FranklinBAnimCtrl);
 			//rfFranklinAnimatorCtrl = Instantiate(AssetBundleLoader.FranklinBAnimCtrl);
 			//lfFranklinAnimatorCtrl4444 = Instantiate(AssetBundleLoader.FranklinBAnimCtrl4444);
-		    //rfFranklinAnimatorCtrl4444 = Instantiate(AssetBundleLoader.FranklinBAnimCtrl4444);
+			//rfFranklinAnimatorCtrl4444 = Instantiate(AssetBundleLoader.FranklinBAnimCtrl4444);
 
-			driveL2 = Instantiate(driveL.gameObject, driveL.parent).transform;
-			driveL2.gameObject.name = "Drivetrain LR";
-			driveR2 = Instantiate(driveR.gameObject, driveR.parent).transform;
-			driveR2.gameObject.name = "Drivetrain RR";
-			driveL2.gameObject.SetActive(false);
-			driveR2.gameObject.SetActive(false);
-			driveL2.localPosition = new Vector3(0, 0, -2.75f);
-			driveR2.localPosition = driveL2.localPosition;
-			driveL2.localScale = new Vector3(-1, 0.8f, 0.8f);
-			driveR2.localScale = new Vector3(1, 0.8f, 0.8f);
+			
 
 			//lrAnimator = driveL2.GetComponent<Animator>();
 			//rrAnimator = driveR2.GetComponent<Animator>();
 			//lrAnimator.runtimeAnimatorController =
-				//Instantiate(AssetBundleLoader.FranklinBAnimCtrl);
+			//Instantiate(AssetBundleLoader.FranklinBAnimCtrl);
 			//rrAnimator.runtimeAnimatorController =
-				//Instantiate(AssetBundleLoader.FranklinBAnimCtrl);
+			//Instantiate(AssetBundleLoader.FranklinBAnimCtrl);
 
 			//lfFranklinValveGear4444 = Instantiate(AssetBundleLoader.FranklinBValveGear4444, driveL).transform;
 			//rfFranklinValveGear4444 = Instantiate(AssetBundleLoader.FranklinBValveGear4444, driveR).transform;
 
-			lBranchPipe = Instantiate(AssetBundleLoader.BranchPipe, driveL2).transform;
-			rBranchPipe = Instantiate(AssetBundleLoader.BranchPipe, driveR2).transform;
+			
 
 			//lFranklinBReverseGear = Instantiate(AssetBundleLoader.FranklinBReverseGear, driveL2).transform;
 			//rFranklinBReverseGear = Instantiate(AssetBundleLoader.FranklinBReverseGear, driveR2).transform;
 			//Instantiate(AssetBundleLoader.FranklinBReverseGearRear, driveR2);
 
 			//Hide extra parts
-			driveL2.Find("s282_mech_cutoff_boomerang_high").gameObject.SetActive(false);
-			driveL2.Find("s282_mech_cutoff_rail").gameObject.SetActive(false);
-			driveL2.Find("s282_mech_cutoff_rod").gameObject.SetActive(false);
-			driveL2.Find("s282_mech_cutoff_rod_hinge").gameObject.SetActive(false);
-			driveL2.Find("s282_mech_cylinder_rod").gameObject.SetActive(false);
-			driveL2.Find("s282_mech_wheels_connect/s282_mech_connect_to_cutoff_base/s282_mech_connect_to_cutoff_rod").gameObject.SetActive(false);
-			driveL2.Find("s282a_brake_shoes(Clone)").gameObject.SetActive(false);
-			driveR2.Find("s282_mech_cutoff_boomerang_high").gameObject.SetActive(false);
-			driveR2.Find("s282_mech_cutoff_rail").gameObject.SetActive(false);
-			driveR2.Find("s282_mech_cutoff_rod").gameObject.SetActive(false);
-			driveR2.Find("s282_mech_cutoff_rod_hinge").gameObject.SetActive(false);
-			driveR2.Find("s282_mech_cylinder_rod").gameObject.SetActive(false);
-			driveR2.Find("s282_mech_wheels_connect/s282_mech_connect_to_cutoff_base/s282_mech_connect_to_cutoff_rod").gameObject.SetActive(false);
-			driveR2.Find("s282a_brake_shoes(Clone)").gameObject.SetActive(false);
-			driveR2.Find("LubricatorParts").gameObject.SetActive(false);
+			
 
-			//Hide LODs
-			driveL2.Find("s282_wheels_driving_1").GetChild(0).gameObject.SetActive(false);
-			driveL2.Find("s282_wheels_driving_2").GetChild(0).gameObject.SetActive(false);
-			driveL2.Find("s282_wheels_driving_3").GetChild(0).gameObject.SetActive(false);
-			driveL2.Find("s282_wheels_driving_4").GetChild(0).gameObject.SetActive(false);
-			driveL2.Find("s282_mech_wheels_connect/s282_mech_wheels_connect_LOD1").gameObject.SetActive(false);
-			driveL2.Find("s282_mech_wheels_connect/s282_mech_push_rod_to_connect").GetChild(0).gameObject.SetActive(false);
-			driveL2.Find("s282_mech_wheels_connect/s282_mech_connect_to_cutoff_base/s282_mech_connect_to_cutoff_base_LOD1").gameObject.SetActive(false);
-			driveR2.Find("s282_mech_wheels_connect/s282_mech_wheels_connect_LOD1").gameObject.SetActive(false);
-			driveR2.Find("s282_mech_wheels_connect/s282_mech_push_rod_to_connect").GetChild(0).gameObject.SetActive(false);
-			driveR2.Find("s282_wheels_driving_1").GetChild(0).gameObject.SetActive(false);
-			driveR2.Find("s282_wheels_driving_2").GetChild(0).gameObject.SetActive(false);
-			driveR2.Find("s282_wheels_driving_3").GetChild(0).gameObject.SetActive(false);
-			driveR2.Find("s282_wheels_driving_4").GetChild(0).gameObject.SetActive(false);
-			driveR2.Find("s282_mech_wheels_connect/s282_mech_connect_to_cutoff_base/s282_mech_connect_to_cutoff_base_LOD1").gameObject.SetActive(false);
-
-			leftSeventhDriveWheel = driveL2.Find("s282_wheels_driving_4");
-			rightSeventhDriveWheel = driveR2.Find("s282_wheels_driving_4");
-			leftSeventhDriveWheel.gameObject.SetActive(false);
-			rightSeventhDriveWheel.gameObject.SetActive(false);
+			
 
 			leftReachRod = driveL.Find("s282_mech_cutoff_rod");
 			rightReachRod = driveR.Find("s282_mech_cutoff_rod");
+			
 
 			firstLeftDriveWheel = driveL.Find("s282_wheels_driving_1");
 			firstRightDriveWheel = driveR.Find("s282_wheels_driving_1");
-
+			
 			secondLeftDriveWheel = driveL.Find("s282_wheels_driving_2");
 			secondRightDriveWheel = driveR.Find("s282_wheels_driving_2");
-
+			
 			thirdLeftDriveWheel = driveL.Find("s282_wheels_driving_3");
 			thirdRightDriveWheel = driveR.Find("s282_wheels_driving_3");
+			
 
 			fourthLeftDriveWheel = driveL.Find("s282_wheels_driving_4");
 			fourthRightDriveWheel = driveR.Find("s282_wheels_driving_4");
+			
 
 			//generate the fifth drive axle
 			fifthLeftDriveWheel = Instantiate(fourthLeftDriveWheel.gameObject, fourthLeftDriveWheel.parent).transform;
@@ -633,7 +559,8 @@ namespace RearrangedS282
 			fifthRightDriveWheel.gameObject.name = "s282_wheels_driving_5";
 			fifthLeftDriveWheel.localPosition = new Vector3(0, 0.71f, 1.65f);
 			fifthRightDriveWheel.localPosition = new Vector3(0, 0.71f, 1.65f);
-
+			
+			
 			//hide fifth drive axle LODs
 			fifthLeftDriveWheel.transform.GetChild(0).gameObject.SetActive(false);
 			fifthRightDriveWheel.transform.GetChild(0).gameObject.SetActive(false);
@@ -645,6 +572,8 @@ namespace RearrangedS282
 			sixthRightDriveWheel.gameObject.name = "s282_wheels_driving_6";
 			sixthLeftDriveWheel.localPosition = new Vector3(0, 0.71f, 0.1f);
 			sixthRightDriveWheel.localPosition = new Vector3(0, 0.71f, 0.1f);
+			
+			
 
 			//hide sixth drive axle LODs
 			sixthLeftDriveWheel.transform.GetChild(0).gameObject.SetActive(false);
@@ -669,64 +598,28 @@ namespace RearrangedS282
 				driveAxle5.localPosition.x,
 				driveAxle5.localPosition.y,
 				-0.05f); //TODO: GET THE RIGHT POSITION OF THE SIXTH DRIVE AXLE
+			
 
 			flangedDriver = firstRightDriveWheel.GetComponent<MeshFilter>().sharedMesh;
+			
 			blindDriver = secondRightDriveWheel.GetComponent<MeshFilter>().sharedMesh;
+		
 			blindDriverBigWeight = thirdRightDriveWheel.GetComponent<MeshFilter>().sharedMesh;
+			
 
 			//Set skins for franklin valve gear, external branch pipes
-			var lfMeshRenderers = lfFranklinValveGear.GetComponentsInChildren<MeshRenderer>();
-			var rfMeshRenderers = rfFranklinValveGear.GetComponentsInChildren<MeshRenderer>();
-			var lrMeshRenderers = driveL2.Find("franklin_type_b(Clone)").GetComponentsInChildren<MeshRenderer>();
-			var rrMeshRenderers = driveR2.Find("franklin_type_b(Clone)").GetComponentsInChildren<MeshRenderer>();
-			var lrReverseRenderers = lFranklinBReverseGear.GetComponentsInChildren<MeshRenderer>();
-			var rrReverseRenderers = rFranklinBReverseGear.GetComponentsInChildren<MeshRenderer>();
-			var rrReverseRearRenderers = driveR2.Find("franklin_type_b_reverse_rear(Clone)").GetComponentsInChildren<MeshRenderer>();
-			var lBranchPipeRenderers = lBranchPipe.GetComponentsInChildren<MeshRenderer>();
-			var rBranchPipeRenderers = rBranchPipe.GetComponentsInChildren<MeshRenderer>();
-			var s282Material = fifthLeftDriveWheel.GetComponent<MeshRenderer>().sharedMaterial;
-			foreach (var meshRenderer in lfMeshRenderers)
-			{
-				meshRenderer.material = s282Material;
-			}
-			foreach (var meshRenderer in rfMeshRenderers)
-			{
-				meshRenderer.material = s282Material;
-			}
-			
-			foreach (var meshRenderer in lrMeshRenderers)
-			{
-				meshRenderer.material = s282Material;
-			}
-			foreach (var meshRenderer in rrMeshRenderers)
-			{
-				meshRenderer.material = s282Material;
-			}
-			foreach (var meshRenderer in lrReverseRenderers)
-			{
-				meshRenderer.material = s282Material;
-			}
-			foreach (var meshRenderer in rrReverseRenderers)
-			{
-				meshRenderer.material = s282Material;
-			}
-			
-			foreach (var meshRenderer in rrReverseRearRenderers)
-			{
-				meshRenderer.material = s282Material;
-			}
-			foreach (var meshRenderer in lBranchPipeRenderers)
-			{
-				meshRenderer.material = s282Material;
-			}
-			foreach (var meshRenderer in rBranchPipeRenderers)
-			{
-				meshRenderer.material = s282Material;
-			}
 
+			
+			var s282Material = fifthLeftDriveWheel.GetComponent<MeshRenderer>().sharedMaterial;
+			
+
+			//i love debugging
+			
+			
+			
 			//duplicate side rods and extend the copies to the fifth axle
-			leftSideRod = loco.transform.Find("LocoS282A_Body/MovingParts_LOD0/Drivetrain L/s282_mech_wheels_connect");
-			rightSideRod = loco.transform.Find("LocoS282A_Body/MovingParts_LOD0/Drivetrain R/s282_mech_wheels_connect");
+			leftSideRod = loco.transform.Find("LocoS282A_Body/MovingParts_LOD0/LocoS282A_Drivetrain L/s282_mech_wheels_connect");
+			rightSideRod = loco.transform.Find("LocoS282A_Body/MovingParts_LOD0/LocoS282A_Drivetrain R/s282_mech_wheels_connect");
 			if (leftSideRod is null)
 				Main.Logger.Error("Error: RemoveFifthDriveAxle: leftSideRod not found");
 			if (rightSideRod is null)
@@ -804,17 +697,7 @@ namespace RearrangedS282
 			ClearSideRodChildren(leftTwoAxleSideRod);
 			ClearSideRodChildren(rightTwoAxleSideRod);
 
-			//create side rods for 4-coupled locomotives
-			leftTwoAxleDuplexSideRod = Instantiate(rightTwoAxleSideRod.gameObject, leftSideRod).transform;
-			rightTwoAxleDuplexSideRod = Instantiate(rightTwoAxleSideRod.gameObject, rightSideRod).transform;
-			leftTwoAxleDuplexSideRod.GetComponent<MeshFilter>().sharedMesh = MeshFinder.Instance.TwoAxleDuplexSideRodMesh;
-			rightTwoAxleDuplexSideRod.GetComponent<MeshFilter>().sharedMesh = MeshFinder.Instance.TwoAxleDuplexSideRodMesh;
-			leftTwoAxleDuplexSideRod.gameObject.SetActive(false);
-			rightTwoAxleDuplexSideRod.gameObject.SetActive(false);
-			leftTwoAxleDuplexSideRod.localPosition = Vector3.zero;
-			leftTwoAxleDuplexSideRod.localEulerAngles = new Vector3(0, 0, 180);
-			rightTwoAxleDuplexSideRod.localPosition = Vector3.zero;
-			rightTwoAxleDuplexSideRod.localEulerAngles = new Vector3(0, 0, 180);
+			
 
 			//hide siderod LODs
 			leftTwoAxleSideRod.transform.Find("s282_mech_wheels_connect_LOD1").gameObject.SetActive(false);
@@ -862,26 +745,22 @@ namespace RearrangedS282
 			leftSixSideRodMeshfilter.sharedMesh = MeshFinder.Instance.FiveSixAxleSideRodMesh;
 			rightSixSideRodMeshfilter.sharedMesh = MeshFinder.Instance.FiveSixAxleSideRodMesh;
 
-			Transform leftRearSideRod = driveL2.Find("s282_mech_wheels_connect");
-			Transform rightRearSideRod = driveR2.Find("s282_mech_wheels_connect");
-			Transform newLRSideRod = Instantiate(leftTwoAxleDuplexSideRod, leftRearSideRod).transform;
-			Transform newRRSideRod = Instantiate(rightTwoAxleDuplexSideRod, rightRearSideRod).transform;
-			newLRSideRod.gameObject.SetActive(true);
-			newRRSideRod.gameObject.SetActive(true);
-			leftRearSideRod.GetComponent<MeshRenderer>().enabled = false;
-			rightRearSideRod.GetComponent<MeshRenderer>().enabled = false;
+			
+			
+			
+			
 
 			//newSideRodMesh.UploadMeshData(true);
 
 			leftMainRod = leftSideRod.Find("s282_mech_push_rod_to_connect");
 			rightMainRod = rightSideRod.Find("s282_mech_push_rod_to_connect");
 			mainRod = leftMainRod.GetComponent<MeshFilter>().sharedMesh;
-			shortMainRod = MeshFinder.Instance.DuplexMainRodMesh;
-			leftRearSideRod.Find("s282_mech_push_rod_to_connect").GetComponent<MeshFilter>().mesh = shortMainRod;
-			rightRearSideRod.Find("s282_mech_push_rod_to_connect").GetComponent<MeshFilter>().mesh = shortMainRod;
+			
+			
 
 			leftCrosshead = driveL.Find("s282_mech_push_rod");
 			rightCrosshead = driveR.Find("s282_mech_push_rod");
+			
 
 			//Setup the brake calipers
 			splitLoco = transform.Find("LocoS282A_Body/Static_LOD0/s282a_split_body(Clone)");
@@ -908,6 +787,7 @@ namespace RearrangedS282
 
 			rightBrakeShoes = driveR.Find("s282a_brake_shoes(Clone)");
 			leftBrakeShoes = driveL.Find("s282a_brake_shoes(Clone)");
+			
 
 			rightFirstBrakeShoe = rightBrakeShoes.Find("s282a_brake_shoe_1");
 			leftFirstBrakeShoe = leftBrakeShoes.Find("s282a_brake_shoe_1");
@@ -918,10 +798,7 @@ namespace RearrangedS282
 			rightFourthBrakeShoe = rightBrakeShoes.Find("s282a_brake_shoe_4");
 			leftFourthBrakeShoe = leftBrakeShoes.Find("s282a_brake_shoe_4");
 
-			if (rightFirstBrakeShoe is null)
-			{
-				Main.Logger.Error("First right brake shoe is null");
-			}
+			
 
 			rightFifthBrakeShoe = Instantiate(rightFirstBrakeShoe.gameObject, rightBrakeShoes).transform;
 			leftFifthBrakeShoe = Instantiate(rightFirstBrakeShoe.gameObject, leftBrakeShoes).transform;
@@ -946,11 +823,7 @@ namespace RearrangedS282
 			//Generate sparks for 5th and 6th drive axles.
 			//In locomotives with less drive axles, we hide the uneeded spark transforms.
 			Transform wheelSparks = loco.transform.Find("LocoS282A_Particles/[wheel sparks]");
-			if (wheelSparks is null)
-			{
-				Main.Logger.Log("[wheel sparks] is null");
-				return;
-			}
+			
 
 			//In vanilla DV, sparks spawn too low. This patches that.
 			//The "z=0.64" is in vanilla DV, this just changes the y coordinate
@@ -1013,7 +886,7 @@ namespace RearrangedS282
 			}
 			if (wheelSlideSparks is not null)
 			{
-				//Main.Logger.Log("Adding wheel slide sparks to 10-coupled S282");
+				Main.Logger.Log("Adding wheel slide sparks to 10-coupled S282");
 				wheelSlideSparks.sparkAnchors = wheelSlideSparks.sparkAnchors
 					.Append(spark5L)
 					.Append(spark5R)
@@ -1218,9 +1091,7 @@ namespace RearrangedS282
 				//case WheelArrangementType.s4664:
 					ShowFourLeadingWheels();
 					break;
-				//case WheelArrangementType.s4444:
-				//	ShowFourLeadingWheels4444();
-					break;
+
 				case WheelArrangementType.s404:
 				case WheelArrangementType.s440:
 				case WheelArrangementType.s442:
@@ -1516,32 +1387,77 @@ namespace RearrangedS282
 		{
 			//lubrication
 			lubricator.localPosition = Vector3.zero;
+			if (lubricator == null)
+			{
+				Main.Logger.Error("lubrication is null");
+			}
 			lubricatorSupport.localPosition = Vector3.zero;
+			if (lubricator == null)
+			{
+				Main.Logger.Error("lubricator is null");
+			}
 			lubricatorSupport.gameObject.SetActive(true);
+			if (lubricatorSupport == null)
+			{
+				Main.Logger.Error("no lubricator support");
+			}
 			lubricatorSightGlass.localPosition = new Vector3(0, 0, -1.37f);
-			lubricatorHandle.localPosition = new Vector3(1.22f, 1.86f, 8.81f);
+			if (lubricatorSightGlass == null)
+			{
+				Main.Logger.Error("lubricator is null");
+			}
+			
 			rOilLines.localPosition = Vector3.zero;
+			if (rOilLines == null)
+			{
+				Main.Logger.Error("OilLine is null");
+			}
 			fOilLines.localPosition = Vector3.zero;
-
+			if (fOilLines == null)
+			{
+				Main.Logger.Error("OilLine is null");
+			}
+			Main.Logger.Log("reset oil system");
 			if (loco.AreExternalInteractablesLoaded)
 			{
 				lubricatorLabel.localPosition = new Vector3(1.17f, 1.95f, 8.86f);
 				lubricatorOilLevel.localPosition = Vector3.zero;
-				lubricatorHandValveJoint.connectedAnchor = new Vector3(1.1232f, 1.9384f, 8.9388f);
-
+				
 				airValveLabel.localPosition += new Vector3(0.97f, 2.32f, 9.91f);
 				airValveJoint.connectedAnchor = new Vector3(0.9056f, 2.4552f, 9.9186f);
 			}
 
 			//air
 			lAirTank.localPosition = Vector3.zero;
+			if (lAirTank == null)
+			{
+				Main.Logger.Error("airsystem is null");
+			}
 			rAirTank.localPosition = Vector3.zero;
+			if (rAirTank == null)
+			{
+				Main.Logger.Error("airsystem is null");
+			}
 			airPump.localPosition = Vector3.zero;
+			if (airPump == null)
+			{
+				Main.Logger.Error("airsystem is null");
+			}
 			airPumpInputPipe.localPosition = Vector3.zero;
+			if (airPumpInputPipe == null)
+			{
+				Main.Logger.Error("airsystem is null");
+			}
 			airPumpOutputPipe.localPosition = Vector3.zero;
+			if (airPumpOutputPipe == null)
+			{
+				Main.Logger.Error("airsystem is null");
+			}
 			airPumpOutputPipe.localScale = Vector3.one;
+			Main.Logger.Log("reset airsystem");
 
 			//crosshead guide and lifting arm support
+
 			lfCrossheadBracket.localPosition = Vector3.zero;
 			lfCrossheadBracket.localScale = new Vector3(-1, 1, 1);
 			lfCrossheadBracket.gameObject.SetActive(true);
@@ -1549,33 +1465,64 @@ namespace RearrangedS282
 			rfCrossheadBracket.localScale = new Vector3(-1, 1, 1);
 			rfCrossheadBracket.gameObject.SetActive(true);
 
-			lfCrossheadBracket.GetComponent<MeshFilter>().mesh = lCrossheadGuide;
-			rfCrossheadBracket.GetComponent<MeshFilter>().mesh = rCrossheadGuide;
-
-			lrCrossheadBracket.gameObject.SetActive(false);
-			rrCrossheadBracket.gameObject.SetActive(false);
-
 			lLiftingArmSupport.gameObject.SetActive(true);
 			rLiftingArmSupport.gameObject.SetActive(true);
 
+
+
+
 			splitS282A.MoveCylinders(Vector3.zero);
+			if (splitS282A == null)
+			{
+				Main.Logger.Error("splits282a no worky");
+			}
 			lfCylinder.gameObject.SetActive(true);
+			if (lfCylinder == null)
+			{
+				Main.Logger.Error("cylinder is null");
+			}
 			rfCylinder.gameObject.SetActive(true);
+			if (rfCylinder == null)
+			{
+				Main.Logger.Error("cylinder is null");
+			}
 			cylinderCocks.gameObject.SetActive(true);
+			if (cylinderCocks == null)
+			{
+				Main.Logger.Error("cylindercocks is null");
+			}
+			Main.Logger.Log("reset cylinders");
 
 			lDryPipe.localPosition = Vector3.zero;
+			if (lDryPipe == null)
+			{
+				Main.Logger.Error("drypipe is null");
+			}
 			rDryPipe.localPosition = Vector3.zero;
 			lDryPipe.localScale = new Vector3(-1, 1, 1);
 			rDryPipe.localScale = new Vector3(-1, 1, 1);
 			lDryPipe.gameObject.SetActive(true);
 			rDryPipe.gameObject.SetActive(true);
-
+			if (rDryPipe == null)
+			{
+				Main.Logger.Error("drypipe is null");
+			}
 			lCrosshead.localScale = Vector3.one;
+			if (lCrosshead == null)
+			{
+				Main.Logger.Error("crosshead is null");
+			}
 			rCrosshead.localScale = Vector3.one;
+			if (rCrosshead == null)
+			{
+				Main.Logger.Error("crosshead is null");
+			}
+			Main.Logger.Log("reset dry pipes");
 
 			loco.massController.CarMass = 125000;
 			loco.massController.UpdateTrainCarMass();
 			SetMassOnTrainPlate(125000);
+			Main.Logger.Log("reset body");
 		}
 
 		private void ResetToFourCoupled()
@@ -1591,19 +1538,14 @@ namespace RearrangedS282
 
 			driveL.gameObject.SetActive(true);
 			driveR.gameObject.SetActive(true);
-			driveL2.gameObject.SetActive(false);
-			driveR2.gameObject.SetActive(false);
+			
 			lfAnimator.runtimeAnimatorController = lfDefaultAnimatorCtrl;
 			rfAnimator.runtimeAnimatorController = rfDefaultAnimatorCtrl;
-			duplexDrivetrainRotaterR.enabled = false;
-			duplexSim.gameObject.SetActive(false);
 			//duplexSimCtrlr.enabled = false;
 
 			//loco.adhesionController.wheelSlideFrictionCoef = loco.carLivery.parentType.WheelSlideFrictionCoef;
 			//loco.adhesionController.wheelslipFrictionCoef = loco.carLivery.parentType.WheelslipFrictionCoef;
 
-			lfFranklinValveGear.gameObject.SetActive(false);
-			rfFranklinValveGear.gameObject.SetActive(false);
 
 			leftTwoAxleSideRod.gameObject.SetActive(false);
 			rightTwoAxleSideRod.gameObject.SetActive(false);
@@ -1615,10 +1557,9 @@ namespace RearrangedS282
 			rightFiveAxleSideRod.gameObject.SetActive(false);
 			leftSixAxleSideRod.gameObject.SetActive(false);
 			rightSixAxleSideRod.gameObject.SetActive(false);
-			leftTwoAxleDuplexSideRod.gameObject.SetActive(false);
-			rightTwoAxleDuplexSideRod.gameObject.SetActive(false);
+			
 
-			//Main.Logger.Log("Hid siderods");
+			Main.Logger.Log("Hid siderods");
 
 			firstLeftDriveWheel.gameObject.SetActive(true);
 			firstRightDriveWheel.gameObject.SetActive(true);
@@ -1641,14 +1582,14 @@ namespace RearrangedS282
 			fourthLeftDriveWheel.localPosition = new Vector3(0, 0.71f, 3.2f);
 			fourthRightDriveWheel.localPosition = new Vector3(0, 0.71f, 3.2f);
 
-			//Main.Logger.Log("moved first and fourth drive wheels to where they should be");
+			Main.Logger.Log("moved first and fourth drive wheels to where they should be");
 
 			driveL.localPosition = Vector3.zero;
 			driveR.localPosition = Vector3.zero;
 			driveL.localScale = new Vector3(-1, 1, 1);
 			driveR.localScale = Vector3.one;
 
-			//Main.Logger.Log("reset driver position and scale");
+			Main.Logger.Log("reset driver position and scale");
 
 			driveAxle1.gameObject.SetActive(true);
 			driveAxle2.gameObject.SetActive(true);
@@ -1657,14 +1598,14 @@ namespace RearrangedS282
 			driveAxle5.gameObject.SetActive(false);
 			driveAxle6.gameObject.SetActive(false);
 
-			//Main.Logger.Log("reset driveAxle show/hide");
+			Main.Logger.Log("reset driveAxle show/hide");
 
 			leftReachRod.gameObject.SetActive(true);
 			rightReachRod.gameObject.SetActive(true);
 			leftReachRod.localScale = Vector3.one;
 			rightReachRod.localScale = Vector3.one;
 
-			//Main.Logger.Log("reset reach rods");
+			Main.Logger.Log("reset reach rods");
 
 			MeshFilter secondLeftMeshFilter = secondLeftDriveWheel.GetComponent<MeshFilter>();
 			MeshFilter secondRightMeshFilter = secondRightDriveWheel.GetComponent<MeshFilter>();
@@ -1676,14 +1617,14 @@ namespace RearrangedS282
 			thirdLeftMeshFilter.mesh = blindDriverBigWeight;
 			thirdRightMeshFilter.mesh = blindDriverBigWeight;
 
-			//Main.Logger.Log("reset blind drivers");
+			Main.Logger.Log("reset blind drivers");
 
 			MeshFilter fourthLeftMeshFilter = fourthLeftDriveWheel.GetComponent<MeshFilter>();
 			MeshFilter fourthRightMeshFilter = fourthRightDriveWheel.GetComponent<MeshFilter>();
 			fourthLeftMeshFilter.mesh = flangedDriver;
 			fourthRightMeshFilter.mesh = flangedDriver;
 
-			//Main.Logger.Log("Hid fifth and sixth drive wheels, side rods");
+			Main.Logger.Log("Hid fifth and sixth drive wheels, side rods");
 
 			//Set wheel radius to stock (56 inch diameter)
 			setWheelRadius(0.712f);
@@ -1691,7 +1632,7 @@ namespace RearrangedS282
 			loco.transform.Find("[sim]/poweredAxles").GetComponent<ConfigurablePortDefinition>().value = 4;
 			loco.transform.Find("[sim]/traction").GetComponent<WheelslipController>().numberOfPoweredAxlesPort.Value = 4;
 
-			//Main.Logger.Log("Set poweredAxles to 4");
+			Main.Logger.Log("Set poweredAxles to 4");
 
 			//show stock siderods
 			leftSideRod.GetComponent<MeshRenderer>().enabled = true;
@@ -1711,8 +1652,7 @@ namespace RearrangedS282
 			ShowReachRod();
 			driveL.Find("s282_mech_wheels_connect/s282_mech_connect_to_cutoff_base").localPosition = new Vector3(0.15f, 0, -1.55f);
 			driveR.Find("s282_mech_wheels_connect/s282_mech_connect_to_cutoff_base").localPosition = new Vector3(0.15f, 0, -1.55f);
-			driveL2.Find("s282_mech_wheels_connect/s282_mech_connect_to_cutoff_base").localPosition = new Vector3(0.15f, 0, -1.55f);
-			driveR2.Find("s282_mech_wheels_connect/s282_mech_connect_to_cutoff_base").localPosition = new Vector3(0.15f, 0, -1.55f);
+			
 
 			leftMainRod.GetComponent<MeshFilter>().mesh = mainRod;
 			rightMainRod.GetComponent<MeshFilter>().mesh = mainRod;
@@ -1799,17 +1739,7 @@ namespace RearrangedS282
 			spark6L.gameObject.SetActive(false);
 			spark6R.gameObject.SetActive(false);
 
-			sparkD1L.gameObject.SetActive(false);
-			sparkD1R.gameObject.SetActive(false);
-			sparkD2L.gameObject.SetActive(false);
-			sparkD2R.gameObject.SetActive(false);
-			sparkD3L.gameObject.SetActive(false);
-			sparkD3R.gameObject.SetActive(false);
-			sparkD4L.gameObject.SetActive(false);
-			sparkD4R.gameObject.SetActive(false);
 
-			rearCylCockWaterDrip.gameObject.SetActive(false);
-			rearCylCockSteam.gameObject.SetActive(false);
 
 			if (valveGearMechanism is not null)
 			{
@@ -1985,7 +1915,7 @@ namespace RearrangedS282
 
 		//------ SHOW DRIVERS ------
 
-		/*private void MoveRearBogieTo(float z, bool setKinematic)
+		  private void MoveRearBogieTo(float z, bool setKinematic)
 		{
 			//move rear bogie so that it lines up with the rearmost driver
 			Transform axleR = loco.transform.Find("Axle_R");
@@ -2004,7 +1934,7 @@ namespace RearrangedS282
 				setBogieKinematicLater(axleRRigidbody);
 			axleR.localPosition = new Vector3(axleR.localPosition.x, axleR.localPosition.y, z);
 			//axleRJoint.autoConfigureConnectedAnchor = true;
-		}*/
+		}
 
 		private void Show4Drivers()
 		{
@@ -2095,7 +2025,7 @@ namespace RearrangedS282
 			lubricator.localPosition = new Vector3(-0.01f, 0.42f, 0.1f);
 			lubricatorSupport.gameObject.SetActive(false);
 			lubricatorSightGlass.localPosition += lubricator.localPosition;
-			lubricatorHandle.localPosition += lubricator.localPosition;
+		
 			rOilLines.localPosition = lubricator.localPosition;
 			fOilLines.localPosition = lubricator.localPosition;
 
@@ -2112,10 +2042,10 @@ namespace RearrangedS282
 			{
 				lubricatorLabel.localPosition += lubricator.localPosition;
 				lubricatorOilLevel.localPosition = lubricator.localPosition;
-				lubricatorHandValveJoint.connectedAnchor += lubricator.localPosition;
-
+				//lubricatorHandValveJoint.connectedAnchor += lubricator.localPosition;
 				airValveLabel.localPosition += airPumpInputPipe.localPosition;
 				airValveJoint.connectedAnchor += airPumpInputPipe.localPosition;
+				lubricatorspinner.localPosition += lubricator.localPosition;
 			}
 
 			//crosshead guide and lifting arm support
@@ -2195,7 +2125,7 @@ namespace RearrangedS282
 			lubricator.localPosition = new Vector3(-0.01f, 0.42f, 0.1f);
 			lubricatorSupport.gameObject.SetActive(false);
 			lubricatorSightGlass.localPosition += lubricator.localPosition;
-			lubricatorHandle.localPosition += lubricator.localPosition;
+			
 			rOilLines.localPosition = lubricator.localPosition;
 			fOilLines.localPosition = lubricator.localPosition;
 
@@ -2212,8 +2142,8 @@ namespace RearrangedS282
 			{
 				lubricatorLabel.localPosition += lubricator.localPosition;
 				lubricatorOilLevel.localPosition = lubricator.localPosition;
-				lubricatorHandValveJoint.connectedAnchor += lubricator.localPosition;
-
+				//lubricatorHandValveJoint.connectedAnchor += lubricator.localPosition;
+				lubricatorspinner.localPosition += lubricator.localPosition;
 				airValveLabel.localPosition += airPumpInputPipe.localPosition;
 				airValveJoint.connectedAnchor += airPumpInputPipe.localPosition;
 			}
@@ -2299,6 +2229,7 @@ namespace RearrangedS282
 			splitS282A.MoveCylinders(new Vector3(0, 0.145f, 0));
 
 			//crosshead guide and lifting arm support
+
 			lfCrossheadBracket.localPosition = new Vector3(0, 0.145f, 0);
 			rfCrossheadBracket.localPosition = lfCrossheadBracket.localPosition;
 			lLiftingArmSupport.gameObject.SetActive(false);
@@ -2333,7 +2264,7 @@ namespace RearrangedS282
 			lubricator.localPosition = new Vector3(-0.01f, 0.42f, 0.1f);
 			lubricatorSupport.gameObject.SetActive(false);
 			lubricatorSightGlass.localPosition += lubricator.localPosition;
-			lubricatorHandle.localPosition += lubricator.localPosition;
+			
 			rOilLines.localPosition = lubricator.localPosition;
 			fOilLines.localPosition = lubricator.localPosition;
 
@@ -2342,7 +2273,8 @@ namespace RearrangedS282
 			{
 				lubricatorLabel.localPosition += lubricator.localPosition;
 				lubricatorOilLevel.localPosition = lubricator.localPosition;
-				lubricatorHandValveJoint.connectedAnchor += lubricator.localPosition;
+				//lubricatorHandValveJoint.connectedAnchor += lubricator.localPosition;
+				lubricatorspinner.localPosition += lubricator.localPosition;
 			}
 		}
 
@@ -2489,11 +2421,11 @@ namespace RearrangedS282
 			rDryPipe.localScale = new Vector3(-1, 1.2f, 1);
 
 			//crosshead guide and lifting arm support
+
 			lfCrossheadBracket.localPosition = new Vector3(0, -0.1f, 0);
 			rfCrossheadBracket.localPosition = lfCrossheadBracket.localPosition;
 			lLiftingArmSupport.gameObject.SetActive(false);
 			rLiftingArmSupport.gameObject.SetActive(false);
-
 			//hide or show valve gear
 			if (!Main.settings.show12CoupledValveGear)
 				HideValveGear();
@@ -2522,7 +2454,7 @@ namespace RearrangedS282
 			lubricator.localPosition = new Vector3(0f, -0.03f, 0.15f);
 			lubricatorSupport.localPosition += lubricator.localPosition;
 			lubricatorSightGlass.localPosition += lubricator.localPosition;
-			lubricatorHandle.localPosition += lubricator.localPosition;
+			
 			rOilLines.localPosition = lubricator.localPosition;
 			fOilLines.localPosition = lubricator.localPosition;
 
@@ -2531,7 +2463,8 @@ namespace RearrangedS282
 			{
 				lubricatorLabel.localPosition += lubricator.localPosition;
 				lubricatorOilLevel.localPosition = lubricator.localPosition;
-				lubricatorHandValveJoint.connectedAnchor += lubricator.localPosition;
+				//lubricatorHandValveJoint.connectedAnchor += lubricator.localPosition;
+				lubricatorspinner.localPosition += lubricator.localPosition;
 			}
 		}
 

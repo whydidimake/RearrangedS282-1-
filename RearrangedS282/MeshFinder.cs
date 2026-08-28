@@ -35,10 +35,7 @@ namespace RearrangedS282
 		{ get; private set; }
 		public Mesh FiveSixAxleSideRodMesh
 		{ get; private set; }
-		public Mesh TwoAxleDuplexSideRodMesh
-		{ get; private set; }
-		public Mesh DuplexMainRodMesh
-		{ get; private set; }
+		
 
 		readonly struct Range
 		{
@@ -159,8 +156,7 @@ namespace RearrangedS282
 			UnityEngine.Object.DontDestroyOnLoad(TwoAxleSideRodMesh);
             UnityEngine.Object.DontDestroyOnLoad(ThreeAxleSideRodMesh);
 			UnityEngine.Object.DontDestroyOnLoad(FiveSixAxleSideRodMesh);
-			UnityEngine.Object.DontDestroyOnLoad(TwoAxleDuplexSideRodMesh);
-			UnityEngine.Object.DontDestroyOnLoad(DuplexMainRodMesh);
+			
 		}
 
 		//This looks in the game files with AssetStudio, finds the specified mesh,
@@ -369,39 +365,15 @@ namespace RearrangedS282
 
 			//Create duplex side rod mesh. Same as the 4 axle side rod mesh, but the
 			//spacing is a bit different.
-			TwoAxleDuplexSideRodMesh = UnityEngine.Object.Instantiate(TwoAxleSideRodMesh);
-			Vector3[] twoAxleDuplexSiderodVerts = TwoAxleDuplexSideRodMesh.vertices;
-			foreach (Range range in verticesToMoveForward325)
-			{
-				for (int i = range.start; i < range.end; i++)
-				{
-					twoAxleDuplexSiderodVerts[i].z += 0.17f;
-				}
-			}
-			for (int i = 152; i < 211; i += 2)
-			{
-				twoAxleDuplexSiderodVerts[i].z += 0.17f;
-			}
-			foreach (Range range in verticesToMoveForward015)
-			{
-				for (int i = range.start; i < range.end; i++)
-				{
-					twoAxleDuplexSiderodVerts[i].z += 0.17f;
-				}
-			}
-			twoAxleDuplexSiderodVerts[173].z += 0.17f;
-			twoAxleDuplexSiderodVerts[175].z += 0.17f;
-			twoAxleDuplexSiderodVerts[237].z += 0.17f;
-			twoAxleDuplexSiderodVerts[239].z += 0.17f;
+		
+			
 
-			TwoAxleDuplexSideRodMesh.vertices = twoAxleDuplexSiderodVerts;
+			
 
 			TwoAxleSideRodMesh.RecalculateNormals();
 			TwoAxleSideRodMesh.RecalculateTangents();
 			TwoAxleSideRodMesh.RecalculateBounds();
-			TwoAxleDuplexSideRodMesh.RecalculateNormals();
-			TwoAxleDuplexSideRodMesh.RecalculateTangents();
-			TwoAxleDuplexSideRodMesh.RecalculateBounds();
+			
 
 			//Load the new three axle siderod mesh into the game
 			ThreeAxleSideRodMesh = UnityEngine.Object.Instantiate(sideRodMesh);
@@ -477,20 +449,7 @@ namespace RearrangedS282
 				return;
 			}
 
-			DuplexMainRodMesh = UnityEngine.Object.Instantiate(mainRodMesh);
-			Vector3[] duplexMainRodVerts = DuplexMainRodMesh.vertices;
-			int[] duplexMainRodTris = DuplexMainRodMesh.triangles;
-			for (int i = 0; i < duplexMainRodVerts.Length; i++)
-			{
-				if (duplexMainRodVerts[i].z > 2)
-				{
-					duplexMainRodVerts[i] = new Vector3(duplexMainRodVerts[i].x, duplexMainRodVerts[i].y, duplexMainRodVerts[i].z - 1.52f);
-				}
-			}
-			DuplexMainRodMesh.vertices = duplexMainRodVerts;
-			DuplexMainRodMesh.RecalculateNormals();
-			DuplexMainRodMesh.RecalculateTangents();
-			DuplexMainRodMesh.RecalculateBounds();
+			
 		}
 
 		internal static Mesh alterCrossheadGuideLMesh(Mesh mesh)

@@ -41,12 +41,7 @@ namespace RearrangedS282
 		s2120,
 		s2122,
 		s4122,
-		s2442,
-		s4444,
 		s404,
-		/*s2662,
-		s2680,
-		s4664*/
 	}
 
 	public static class WheelArrangement
@@ -89,12 +84,7 @@ namespace RearrangedS282
 			"2-12-0",
 			"2-12-2",
 			"4-12-2 Union Pacific",
-			//"2-4-4-2 Duplex", (why is this so hard)
-			//"4-4-4-4 Duplex",
 			"4-0-4 Drivers not found",
-			/*"2-6-6-2",
-			"2-6-8-0",
-			"4-6-6-4 Challenger"*/
 		};
 
 		public static readonly float[] NumOfNondrivenWheels =
@@ -130,8 +120,6 @@ namespace RearrangedS282
 			2,//"2-12-0",
 			4,//"2-12-2",
 			6,//"4-12-2 Union Pacific",
-			4,//"2-4-4-2",
-			8,//"4-4-4-4",
 			8,//"4-0-4",
 		};
 	}

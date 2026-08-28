@@ -169,11 +169,7 @@ namespace RearrangedS282
 			if (spawn4122)
 				RandomWAs.Add(WheelArrangementType.s4122);
 
-			//DUPLEX
-			if (spawn2442)
-				RandomWAs.Add(WheelArrangementType.s2442);
-			if (spawn4444)
-				RandomWAs.Add(WheelArrangementType.s4444);
+			
 		}
 	}
 }
