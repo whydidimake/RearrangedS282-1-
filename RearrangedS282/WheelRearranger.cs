@@ -401,7 +401,6 @@ namespace RearrangedS282
 			lubricatorOilLevel = null;
 			airValveLabel = null;
 			airValveJoint = null;
-			lubricatorspinner = null;
 		}
 
 		private void SetupAir()
@@ -2025,7 +2024,7 @@ namespace RearrangedS282
 			lubricator.localPosition = new Vector3(-0.01f, 0.42f, 0.1f);
 			lubricatorSupport.gameObject.SetActive(false);
 			lubricatorSightGlass.localPosition += lubricator.localPosition;
-		
+		    lubricatorspinner.localPosition += lubricator.localPosition;
 			rOilLines.localPosition = lubricator.localPosition;
 			fOilLines.localPosition = lubricator.localPosition;
 
@@ -2125,7 +2124,7 @@ namespace RearrangedS282
 			lubricator.localPosition = new Vector3(-0.01f, 0.42f, 0.1f);
 			lubricatorSupport.gameObject.SetActive(false);
 			lubricatorSightGlass.localPosition += lubricator.localPosition;
-			
+			lubricatorspinner.localPosition += lubricator.localPosition;
 			rOilLines.localPosition = lubricator.localPosition;
 			fOilLines.localPosition = lubricator.localPosition;
 
@@ -2264,7 +2263,7 @@ namespace RearrangedS282
 			lubricator.localPosition = new Vector3(-0.01f, 0.42f, 0.1f);
 			lubricatorSupport.gameObject.SetActive(false);
 			lubricatorSightGlass.localPosition += lubricator.localPosition;
-			
+			lubricatorspinner.localPosition += lubricator.localPosition;
 			rOilLines.localPosition = lubricator.localPosition;
 			fOilLines.localPosition = lubricator.localPosition;
 
@@ -2454,7 +2453,7 @@ namespace RearrangedS282
 			lubricator.localPosition = new Vector3(0f, -0.03f, 0.15f);
 			lubricatorSupport.localPosition += lubricator.localPosition;
 			lubricatorSightGlass.localPosition += lubricator.localPosition;
-			
+			lubricatorspinner.localPosition += lubricator.localPosition;
 			rOilLines.localPosition = lubricator.localPosition;
 			fOilLines.localPosition = lubricator.localPosition;
 
