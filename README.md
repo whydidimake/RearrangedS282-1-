@@ -1,5 +1,6 @@
 # Rearranged S282
 (b99 port of https://github.com/pjschinske/dv-rearranged-S282)
+ # VERY MUCH INCOMPATIBLE WITH REALISTIC FIRING
 
 This is a Derail Valley mod that changes the [wheel arrangement](https://en.wikipedia.org/wiki/Wheel_arrangement) of the S282 locomotive.
 
