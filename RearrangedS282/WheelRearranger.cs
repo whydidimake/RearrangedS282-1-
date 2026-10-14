@@ -2044,7 +2044,7 @@ namespace RearrangedS282
 				//lubricatorHandValveJoint.connectedAnchor += lubricator.localPosition;
 				airValveLabel.localPosition += airPumpInputPipe.localPosition;
 				airValveJoint.connectedAnchor += airPumpInputPipe.localPosition;
-				lubricatorspinner.localPosition += lubricator.localPosition;
+				//lubricatorspinner.localPosition += lubricator.localPosition;
 			}
 
 			//crosshead guide and lifting arm support
@@ -2142,7 +2142,7 @@ namespace RearrangedS282
 				lubricatorLabel.localPosition += lubricator.localPosition;
 				lubricatorOilLevel.localPosition = lubricator.localPosition;
 				//lubricatorHandValveJoint.connectedAnchor += lubricator.localPosition;
-				lubricatorspinner.localPosition += lubricator.localPosition;
+				//lubricatorspinner.localPosition += lubricator.localPosition;
 				airValveLabel.localPosition += airPumpInputPipe.localPosition;
 				airValveJoint.connectedAnchor += airPumpInputPipe.localPosition;
 			}
@@ -2273,7 +2273,7 @@ namespace RearrangedS282
 				lubricatorLabel.localPosition += lubricator.localPosition;
 				lubricatorOilLevel.localPosition = lubricator.localPosition;
 				//lubricatorHandValveJoint.connectedAnchor += lubricator.localPosition;
-				lubricatorspinner.localPosition += lubricator.localPosition;
+				//lubricatorspinner.localPosition += lubricator.localPosition;
 			}
 		}
 
@@ -2463,7 +2463,7 @@ namespace RearrangedS282
 				lubricatorLabel.localPosition += lubricator.localPosition;
 				lubricatorOilLevel.localPosition = lubricator.localPosition;
 				//lubricatorHandValveJoint.connectedAnchor += lubricator.localPosition;
-				lubricatorspinner.localPosition += lubricator.localPosition;
+				//lubricatorspinner.localPosition += lubricator.localPosition;
 			}
 		}
 
